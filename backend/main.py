@@ -1,9 +1,18 @@
+import os
 from fastapi import FastAPI, Depends
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 def get_chain():
-    llm = OpenAI(api_key="your_openai_api_key")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("API key not found. Please set OPENAI_API_KEY in your .env file.")
+    
+    llm = OpenAI(api_key=api_key)
     chain = LLMChain(llm=llm)
     return chain
 
@@ -13,3 +22,4 @@ app = FastAPI()
 def generate_quiz(skill: str, chain: LLMChain = Depends(get_chain)):
     response = chain.run(f"Generate a quiz on {skill}")
     return {"quiz": response}
+
