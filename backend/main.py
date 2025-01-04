@@ -13,7 +13,7 @@ def get_chain():
         raise ValueError("API key not found. Please set OPENAI_API_KEY in your .env file.")
     
     llm = OpenAI(api_key=api_key)
-    chain = LLMChain(llm=llm)
+    chain = LLMChain(model="claude-2")
     return chain
 
 app = FastAPI()
